@@ -20,6 +20,7 @@
             [buddy.core.nonce :as nonce]
             [buddy.core.codecs :as codecs])
   (:import
+   java.util.Base64
    org.bouncycastle.crypto.engines.TwofishEngine
    org.bouncycastle.crypto.engines.SerpentEngine
    org.bouncycastle.crypto.engines.BlowfishEngine
@@ -381,15 +382,20 @@
     :aes192-cbc-hmac-sha384 (bytes/slice key 0 24)
     :aes256-cbc-hmac-sha512 (bytes/slice key 0 32)))
 
+(defn- encodefds [to-encode]
+  (.encodeToString (Base64/getEncoder) to-encode))
+
 (defn- generate-authtag
   [{:keys [alg input authkey iv aad] :as params}]
   (let [al (if aad
              (aad->bytes aad)
              (byte-array 0))
-        data (bytes/concat aad iv input al)
-        fulltag (mac/hash data {:key authkey :alg :hmac :digest alg})
-        truncatesize (quot (count fulltag) 2)]
-    (bytes/slice fulltag 0 truncatesize)))
+        data (bytes/concat aad iv input al)]
+    (println "data: " (encodefds data))
+    (println "key: " (encodefds authkey))
+    (let [fulltag (mac/hash data {:key authkey :alg :hmac :digest alg})
+          truncatesize (quot (count fulltag) 2)]
+      (bytes/slice fulltag 0 truncatesize))))
 
 (defn- verify-authtag
   [tag params]
