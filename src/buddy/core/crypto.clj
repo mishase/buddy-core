@@ -391,7 +391,7 @@
              (aad->bytes aad)
              (byte-array 0))
         data (bytes/concat aad iv input al)]
-    (println "data: " (encodefds input))
+    (println "input: " (encodefds input))
     (println "authkey: " (encodefds authkey))
     (println "iv: " (encodefds iv))
     (println "aad: " (aad aad))
