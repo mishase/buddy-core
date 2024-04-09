@@ -382,6 +382,9 @@
     :aes192-cbc-hmac-sha384 (bytes/slice key 0 24)
     :aes256-cbc-hmac-sha512 (bytes/slice key 0 32)))
 
+(defn encode [to-encode]
+  (.encodeToString (Base64/getEncoder) to-encode))
+
 (defn- generate-authtag
   [{:keys [alg input authkey iv aad] :as params}]
   (let [al (if aad
