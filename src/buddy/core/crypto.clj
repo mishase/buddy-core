@@ -387,12 +387,12 @@
   (let [al (if aad
              (aad->bytes aad)
              (byte-array 0))
-        data (bytes/concat aad iv input al)
-		(.println "data: " (encode data))
-		(.println "key: " (encode authkey))
-        fulltag (mac/hash data {:key authkey :alg :hmac :digest alg})
-        truncatesize (quot (count fulltag) 2)]
-    (bytes/slice fulltag 0 truncatesize)))
+        data (bytes/concat aad iv input al)]
+    (println "data: " (encode data))
+    (println "key: " (encode authkey))
+    (let [fulltag (mac/hash data {:key authkey :alg :hmac :digest alg})
+          truncatesize (quot (count fulltag) 2)]
+      (bytes/slice fulltag 0 truncatesize))))
 
 (defn- verify-authtag
   [tag params]
