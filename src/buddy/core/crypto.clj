@@ -20,6 +20,7 @@
             [buddy.core.nonce :as nonce]
             [buddy.core.codecs :as codecs])
   (:import
+   java.util.Base64
    org.bouncycastle.crypto.engines.TwofishEngine
    org.bouncycastle.crypto.engines.SerpentEngine
    org.bouncycastle.crypto.engines.BlowfishEngine
@@ -387,6 +388,8 @@
              (aad->bytes aad)
              (byte-array 0))
         data (bytes/concat aad iv input al)
+		(.println "data: " (encode data))
+		(.println "key: " (encode authkey))
         fulltag (mac/hash data {:key authkey :alg :hmac :digest alg})
         truncatesize (quot (count fulltag) 2)]
     (bytes/slice fulltag 0 truncatesize)))
