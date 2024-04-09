@@ -394,8 +394,8 @@
     (println "input: " (encodefds input))
     (println "authkey: " (encodefds authkey))
     (println "iv: " (encodefds iv))
-    (println "aad: " (aad aad))
-    (println "data: " (aad data))
+    (println "aad: " (encodefds aad))
+    (println "data: " (encodefds data))
     (println "key: " (encodefds authkey))
     (let [fulltag (mac/hash data {:key authkey :alg :hmac :digest alg})
           truncatesize (quot (count fulltag) 2)]
